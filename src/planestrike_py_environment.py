@@ -185,7 +185,6 @@ class PlaneStrikePyEnvironment(py_environment.PyEnvironment):
 
     def _step(self, action):
         """Apply action and return new time_step."""
-        # TODO: add code to apply action and return new time_step
         if self._hit_count == self._plane_size:
             self._episode_ended = True
             return self.reset()
@@ -236,8 +235,8 @@ class PlaneStrikePyEnvironment(py_environment.PyEnvironment):
             return ts.transition(
                 np.array(self._visible_board, dtype=np.float32),
                 MISS_REWARD,
-                self._discount)
-
+                self._discount,
+            )
 
     def render(self, mode: "human") -> np.ndarray:
         if mode != "human":

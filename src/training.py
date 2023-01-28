@@ -1,4 +1,4 @@
-# Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+#   Copyright 2022 The TensorFlow Authors. All Rights Reserved.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -87,7 +87,6 @@ def collect_episode(environment, policy, num_episodes, replay_buffer_observer):
 def train_agent(iterations, modeldir, logdir, policydir):
     """Train and convert the model using TF Agents."""
 
-    # TODO: add code to instantiate the training and evaluation environments
     train_py_env = planestrike_py_environment.PlaneStrikePyEnvironment(
         board_size=BOARD_SIZE, discount=DISCOUNT, max_steps=BOARD_SIZE**2
     )
@@ -98,16 +97,15 @@ def train_agent(iterations, modeldir, logdir, policydir):
     train_env = tf_py_environment.TFPyEnvironment(train_py_env)
     eval_env = tf_py_environment.TFPyEnvironment(eval_py_env)
 
-
-    # TODO: add code to create a reinforcement learning agent that is going to be trained
+    # Alternatively you could use ActorDistributionNetwork as actor_net
     actor_net = tfa.networks.Sequential(
-    [
-        tfa.keras_layers.InnerReshape([BOARD_SIZE, BOARD_SIZE], [BOARD_SIZE**2]),
-        tf.keras.layers.Dense(FC_LAYER_PARAMS, activation="relu"),
-        tf.keras.layers.Dense(BOARD_SIZE**2),
-        tf.keras.layers.Lambda(lambda t: tfp.distributions.Categorical(logits=t)),
-    ],
-    input_spec=train_py_env.observation_spec(),
+        [
+            tfa.keras_layers.InnerReshape([BOARD_SIZE, BOARD_SIZE], [BOARD_SIZE**2]),
+            tf.keras.layers.Dense(FC_LAYER_PARAMS, activation="relu"),
+            tf.keras.layers.Dense(BOARD_SIZE**2),
+            tf.keras.layers.Lambda(lambda t: tfp.distributions.Categorical(logits=t)),
+        ],
+        input_spec=train_py_env.observation_spec(),
     )
 
     optimizer = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE)
@@ -165,7 +163,6 @@ def train_agent(iterations, modeldir, logdir, policydir):
     summary_writer = tf.summary.create_file_writer(logdir)
 
     for i in range(iterations):
-        # TODO: add code to collect game episodes and train the agent
         # Collect a few episodes using collect_policy and save to the replay buffer.
         collect_episode(
             train_py_env,
